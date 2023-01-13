@@ -5,10 +5,16 @@ import numpy as np
 
 from jaxrl2.data.dataset import Dataset
 
+from tqdm import tqdm, trange
 
-def evaluate(agent, env: gym.Env, num_episodes: int) -> Dict[str, float]:
+
+def evaluate(agent, env: gym.Env, num_episodes: int, progress_bar=False) -> Dict[str, float]: ###===### ###---###
     env = gym.wrappers.RecordEpisodeStatistics(env, deque_size=num_episodes)
-    for _ in range(num_episodes):
+    ###===###
+    # for _ in range(num_episodes):
+    tbar = trange(num_episodes) if progress_bar else range(num_episodes)
+    for _ in tbar:
+    ###---###
         observation, done = env.reset(), False
         while not done:
             action = agent.eval_actions(observation)

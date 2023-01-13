@@ -130,3 +130,10 @@ def main(_):
 
 if __name__ == "__main__":
     app.run(main)
+
+
+"""
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.mujoco/mujoco210/bin
+python3 -u train_offline_pixels.py
+"""
