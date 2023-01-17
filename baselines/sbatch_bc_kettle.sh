@@ -35,13 +35,13 @@ ls -l /usr/local
 python3 -u gpu_test.py
 
 #
-# XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py \
-# --env_name randomized_kitchen_kettle-v1 \
-# --tqdm=true \
-# --eval_episodes 100 \
-# --eval_interval 10000 \
-# --seed 3
+XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py \
+--env_name randomized_kitchen_kettle-v1 \
+--tqdm=true \
+--eval_episodes 100 \
+--eval_interval 10000 \
+--seed 3
 
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 5 &
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 7 &
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 9
+# XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 5 &
+# XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 7 &
+# XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u BC_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 9

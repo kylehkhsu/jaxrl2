@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:titanrtx:1
 #SBATCH --mem=64G
-#SBATCH --job-name="IQL_kettle"
+#SBATCH --job-name="CQL_kettle"
 #SBATCH --account=iris
 
 cd /iris/u/khatch/vd5rl/jaxrl2/baselines
@@ -36,12 +36,12 @@ python3 -u gpu_test.py
 
 
 
-# XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
-# --env_name random_kitchen-v1 \
-# --tqdm=true \
-# --eval_episodes 100 \
-# --eval_interval 10000 \
-# --seed 3
+XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u CQL_trainer.py \
+--env_name randomized_kitchen_kettle-v1 \
+--tqdm=true \
+--eval_episodes 100 \
+--eval_interval 10000 \
+--seed 3
 
 XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
 --env_name randomized_kitchen_kettle-v1 \
@@ -50,6 +50,9 @@ XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
 --eval_interval 10000 \
 --seed 3
 
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 7 --seed 5 &
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 7 --seed 7 &
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py --env_name randomized_kitchen_kettle-v1 --eval_episodes 100 --eval_interval 10000 --seed 7 --seed 9
+XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
+--env_name walker2d-medium-replay-v1 \
+--tqdm=true \
+--eval_episodes 100 \
+--eval_interval 10000 \
+--seed 3

@@ -10,7 +10,7 @@ from absl import app, flags
 from flax.metrics.tensorboard import SummaryWriter
 from ml_collections import config_flags
 
-from jaxrl2.agents.pixel_iql import PixelIQLLearner
+from jaxrl2.agents.pixel_cql import PixelCQLLearner
 from jaxrl2.evaluation import evaluate
 
 tf.config.experimental.set_visible_devices([], "GPU")
@@ -18,7 +18,7 @@ tf.config.experimental.set_visible_devices([], "GPU")
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('env_name', 'randomized_kitchen_microwave-v1', 'Environment name.')
-flags.DEFINE_string('save_dir', './IQL_full/', 'Tensorboard logging dir.')
+flags.DEFINE_string('save_dir', './CQL_full/', 'Tensorboard logging dir.')
 flags.DEFINE_integer('seed', 42, 'Random seed.')
 flags.DEFINE_integer('eval_episodes', 250,
                      'Number of episodes used for evaluation.')
@@ -31,7 +31,7 @@ flags.DEFINE_boolean('tqdm', False, 'Use tqdm progress bar.')
 flags.DEFINE_boolean('save_video', False, 'Save videos during evaluation.')
 config_flags.DEFINE_config_file(
     'config',
-    './configs/offline_pixels_config.py:iql',
+    './configs/offline_pixels_config.py:cql',
     'File path to the training hyperparameter configuration.',
     lock_config=False)
 
@@ -39,7 +39,7 @@ def main(_):
     from jax.lib import xla_bridge
     print('DEVICE:', xla_bridge.get_backend().platform)
 
-    wandb.init(project='IQL_clean_v7')
+    wandb.init(project='CQL_clean_v7')
     wandb.config.update(FLAGS)
 
     env = gym.make(FLAGS.env_name)
@@ -56,7 +56,7 @@ def main(_):
     #agent = PixelIQLLearner(FLAGS.seed, env.observation_space.sample(),
     #                        env.action_space.sample(), **kwargs)
 
-    print('Environment Cretaed')
+    print('Environment Created')
     kwargs = dict(FLAGS.config.model_config)
     if kwargs.pop('cosine_decay', False):
         kwargs['decay_steps'] = FLAGS.max_steps
@@ -82,7 +82,7 @@ def main(_):
         if i % FLAGS.log_interval == 0:
 
             if not FLAGS.tqdm:
-                print(f"[IQL seed {FLAGS.seed}] {i}/{FLAGS.max_steps} steps")
+                print(f"[CQL seed {FLAGS.seed}] {i}/{FLAGS.max_steps} steps")
 
             for k, v in update_info.items():
                 if v.ndim == 0:
@@ -100,3 +100,12 @@ def main(_):
 
 if __name__ == '__main__':
     app.run(main)
+
+"""
+Make preemptible?
+Change wanb logging project
+Make it so that it's group wandb logging
+Make tau 0?
+
+Make sure proprio is called 'state', or rename stuff
+"""
