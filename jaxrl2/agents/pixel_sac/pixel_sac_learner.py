@@ -32,7 +32,13 @@ from jaxrl2.utils.target_update import soft_target_update
 
 
 @functools.partial(
-    jax.jit, static_argnames=("critic_reduction", "share_encoder", "backup_entropy")
+    jax.jit,
+    static_argnames=(
+        "critic_reduction",
+        "share_encoder",
+        "backup_entropy",
+        "bc_regularizer",
+    ),
 )
 def _update_jit(
     rng: PRNGKey,
@@ -47,6 +53,7 @@ def _update_jit(
     backup_entropy: bool,
     critic_reduction: str,
     share_encoder: bool,
+    bc_regularizer: float = 0.0,
 ) -> Tuple[PRNGKey, TrainState, TrainState, Params, TrainState, Dict[str, float]]:
     batch = _unpack(batch)
 
@@ -83,7 +90,9 @@ def _update_jit(
     )
 
     rng, key = jax.random.split(rng)
-    new_actor, actor_info = update_actor(key, actor, new_critic, temp, batch)
+    new_actor, actor_info = update_actor(
+        key, actor, new_critic, temp, batch, bc_regularizer
+    )
     new_temp, alpha_info = update_temperature(
         temp, actor_info["entropy"], target_entropy
     )
@@ -123,6 +132,7 @@ class PixelSACLearner(Agent):
         init_temperature: float = 1.0,
         critic_reduction: str = "min",
         dropout_rate: Optional[float] = None,
+        bc_regularizer: float = 0.0,
     ):
         """
         An implementation of the version of Soft-Actor-Critic described in https://arxiv.org/abs/1812.05905
@@ -141,6 +151,7 @@ class PixelSACLearner(Agent):
         self.tau = tau
         self.discount = discount
         self.share_encoder = share_encoder
+        self.bc_regularizer = bc_regularizer
 
         rng = jax.random.PRNGKey(seed)
         rng, actor_key, critic_key, temp_key = jax.random.split(rng, 4)
@@ -190,7 +201,6 @@ class PixelSACLearner(Agent):
         self._temp = temp
         self._target_critic_params = target_critic_params
 
-
     def update(self, batch: FrozenDict) -> Dict[str, float]:
         (
             new_rng,
@@ -212,6 +222,7 @@ class PixelSACLearner(Agent):
             self.backup_entropy,
             self.critic_reduction,
             self.share_encoder,
+            self.bc_regularizer,
         )
 
         self._rng = new_rng
