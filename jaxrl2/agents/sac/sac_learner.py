@@ -22,7 +22,9 @@ from jaxrl2.types import Params, PRNGKey
 from jaxrl2.utils.target_update import soft_target_update
 
 
-@functools.partial(jax.jit, static_argnames=("backup_entropy", "critic_reduction"))
+@functools.partial(
+    jax.jit, static_argnames=("backup_entropy", "critic_reduction", "bc_regularizer")
+)
 def _update_jit(
     rng: PRNGKey,
     actor: TrainState,
@@ -35,6 +37,7 @@ def _update_jit(
     target_entropy: float,
     backup_entropy: bool,
     critic_reduction: str,
+    bc_regularizer: float = 0.0,
 ) -> Tuple[PRNGKey, TrainState, TrainState, Params, TrainState, Dict[str, float]]:
 
     rng, key = jax.random.split(rng)
@@ -55,7 +58,9 @@ def _update_jit(
     )
 
     rng, key = jax.random.split(rng)
-    new_actor, actor_info = update_actor(key, actor, new_critic, temp, batch)
+    new_actor, actor_info = update_actor(
+        key, actor, new_critic, temp, batch, bc_regularizer
+    )
     new_temp, alpha_info = update_temperature(
         temp, actor_info["entropy"], target_entropy
     )
@@ -86,6 +91,7 @@ class SACLearner(Agent):
         backup_entropy: bool = True,
         critic_reduction: str = "min",
         init_temperature: float = 1.0,
+        bc_regularizer: float = 0.0,
     ):
         """
         An implementation of the version of Soft-Actor-Critic described in https://arxiv.org/abs/1812.05905
@@ -100,6 +106,7 @@ class SACLearner(Agent):
 
         self.backup_entropy = backup_entropy
         self.critic_reduction = critic_reduction
+        self.bc_regularizer = bc_regularizer
 
         self.tau = tau
         self.discount = discount
@@ -168,6 +175,7 @@ class SACLearner(Agent):
             self.target_entropy,
             self.backup_entropy,
             self.critic_reduction,
+            self.bc_regularizer
         )
 
         self._rng = new_rng
