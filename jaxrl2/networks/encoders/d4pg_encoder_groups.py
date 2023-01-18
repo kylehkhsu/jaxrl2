@@ -27,7 +27,7 @@ class D4PGEncoderGroups(nn.Module):
         # x[..., 6:] = 10
 
         for features, filter_, stride in zip(self.features, self.filters, self.strides):
-            # print("\n[Before] x.shape:", x.shape)
+            print("\n[Before] x.shape:", x.shape)
             x = nn.Conv(
                 features * self.groups,
                 kernel_size=(filter_, filter_),
@@ -37,7 +37,7 @@ class D4PGEncoderGroups(nn.Module):
                 padding=self.padding,
                 feature_group_count=self.groups,
             )(x)
-            # print("[After] x.shape:", x.shape)
+            print("[After] x.shape:", x.shape)
             x = nn.relu(x)
 
         ### FOR DEBUGGING ###

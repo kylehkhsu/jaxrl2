@@ -20,6 +20,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_string('env_name', 'randomized_kitchen_microwave-v1', 'Environment name.')
 flags.DEFINE_string('save_dir', './IQL_full/', 'Tensorboard logging dir.')
+flags.DEFINE_string('project', "BC_clean_v7", 'WandB project.')
 flags.DEFINE_integer('seed', 42, 'Random seed.')
 flags.DEFINE_integer('eval_episodes', 250,
                      'Number of episodes used for evaluation.')
@@ -40,7 +41,8 @@ def main(_):
     from jax.lib import xla_bridge
     print('DEVICE:', xla_bridge.get_backend().platform)
 
-    wandb.init(project='BC_v2')
+    # wandb.init(project='BC_clean_v7')
+    wandb.init(project=FLAGS.project)
     wandb.config.update(FLAGS)
 
     env = gym.make(FLAGS.env_name)

@@ -23,8 +23,8 @@ from jaxrl2.agents.cql.temperature import Temperature
 from jaxrl2.networks.normal_tanh_policy import NormalTanhPolicy
 
 from jaxrl2.data.dataset import DatasetDict
-from jaxrl2.networks.encoders import D4PGEncoder
-# from jaxrl2.networks.encoders import D4PGEncoderGroups ###===### ###---###
+# from jaxrl2.networks.encoders import D4PGEncoder
+from jaxrl2.networks.encoders import D4PGEncoderGroups ###===### ###---###
 # from jaxrl2.networks.normal_policy import UnitStdNormalPolicy
 from jaxrl2.networks.pixel_multiplexer import PixelMultiplexer
 from jaxrl2.networks.values import StateActionEnsemble, StateValue
@@ -155,8 +155,8 @@ class PixelCQLLearner(Agent):
         rng = jax.random.PRNGKey(seed)
         rng, actor_key, critic_key, temp_key = jax.random.split(rng, 4)
 
-        encoder_def = D4PGEncoder(cnn_features, cnn_filters, cnn_strides, cnn_padding)
-        # encoder_def = D4PGEncoderGroups(cnn_features, cnn_filters, cnn_strides, cnn_padding, cnn_groups) ###===### ###---###
+        # encoder_def = D4PGEncoder(cnn_features, cnn_filters, cnn_strides, cnn_padding)
+        encoder_def = D4PGEncoderGroups(cnn_features, cnn_filters, cnn_strides, cnn_padding, cnn_groups) ###===### ###---###
 
         if decay_steps is not None:
             actor_lr = optax.cosine_decay_schedule(actor_lr, decay_steps)

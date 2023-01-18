@@ -41,17 +41,19 @@ XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u CQL_trainer.py \
 --tqdm=true \
 --eval_episodes 100 \
 --eval_interval 10000 \
+--debug True \
+--seed 3
+
+XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u CQL_trainer_walker.py \
+--env_name walker_walk \
+--tqdm=true \
+--eval_episodes 20 \
+--project walkertest \
+--eval_interval 1000 \
 --seed 3
 
 XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
 --env_name randomized_kitchen_kettle-v1 \
---tqdm=true \
---eval_episodes 100 \
---eval_interval 10000 \
---seed 3
-
-XLA_PYTHON_CLIENT_PREALLOCATE=false python3 -u IQL_trainer.py \
---env_name walker2d-medium-replay-v1 \
 --tqdm=true \
 --eval_episodes 100 \
 --eval_interval 10000 \
